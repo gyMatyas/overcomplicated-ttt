@@ -33,8 +33,8 @@ public class GameController {
     }
 
     @ModelAttribute("avatar_uri")
-    public String getAvatarUri() {
-        return "https://robohash.org/codecool";
+    public String getAvatarUri(@ModelAttribute("player") Player player) {
+        return "https://robohash.org/" + player.getUserName();
     }
 
     @GetMapping(value = "/")
@@ -50,7 +50,7 @@ public class GameController {
     @GetMapping(value = "/game")
     public String gameView(@ModelAttribute("player") Player player, Model model) {
         serviceUtility.getChuckNorrisJoke(model);
-        model.addAttribute("comic_uri", "https://imgs.xkcd.com/comics/bad_code.png");
+        serviceUtility.getComic(model);
         return "game";
     }
 

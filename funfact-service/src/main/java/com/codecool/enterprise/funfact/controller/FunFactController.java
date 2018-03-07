@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -36,8 +37,10 @@ public class FunFactController {
             String responseBody = scanner.useDelimiter("\\A").next();
             System.out.println(responseBody);
             try {
-                Map<String, String> out = gson.fromJson(responseBody, type);
-                return out.get("value");
+                Map<String, String> response = gson.fromJson(responseBody, type);
+                Map<String, String> out = new HashMap<>();
+                out.put("quote", response.get("value"));
+                return gson.toJson(out);
             } catch (IllegalStateException e) {
                 return "Chuck Norris crashed the fun fact server! He is totally able to this!";
             }
