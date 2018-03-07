@@ -1,14 +1,26 @@
 package com.codecool.enterprise.overcomplicated.controller;
 
+import com.codecool.enterprise.overcomplicated.Utility.ServiceUtility;
 import com.codecool.enterprise.overcomplicated.model.Player;
 import com.codecool.enterprise.overcomplicated.model.TictactoeGame;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
+
+import static org.springframework.http.HttpHeaders.USER_AGENT;
+
 @Controller
 @SessionAttributes({"player", "game"})
 public class GameController {
+
+    @Autowired
+    ServiceUtility serviceUtility;
 
     @ModelAttribute("player")
     public Player getPlayer() {
@@ -37,7 +49,7 @@ public class GameController {
 
     @GetMapping(value = "/game")
     public String gameView(@ModelAttribute("player") Player player, Model model) {
-        model.addAttribute("funfact", "&quot;Chuck Norris knows the last digit of pi.&quot;");
+        serviceUtility.getChuckNorrisJoke(model);
         model.addAttribute("comic_uri", "https://imgs.xkcd.com/comics/bad_code.png");
         return "game";
     }
@@ -47,4 +59,5 @@ public class GameController {
         System.out.println("Player moved " + move);
         return "redirect:/game";
     }
+
 }
