@@ -1,9 +1,17 @@
 package com.codecool.enterprise.overcomplicated.model;
 
-import java.net.URI;
-
 public class Player {
     String userName = "Anonymous";
+
+    public String getAvatarURI() {
+        return avatarURI;
+    }
+
+    public void setAvatarURI(String avatarURI) {
+        this.avatarURI = avatarURI;
+    }
+
+    String avatarURI = null;
 
     public String getUserName() {
         return userName;

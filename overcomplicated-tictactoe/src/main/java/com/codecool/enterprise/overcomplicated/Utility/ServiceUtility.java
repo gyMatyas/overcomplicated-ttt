@@ -19,7 +19,7 @@ public class ServiceUtility {
     public void getChuckNorrisJoke(Model model) {
         try {
             URL obj = new URL("http://localhost:60000/getChuckNorrisJoke");
-            Map<String, String> response = getResponse(obj);
+            Map<String, Object> response = getResponse(obj);
             model.addAttribute("funfact", "&quot;" + response.get("quote") + "&quot;");
         } catch (IOException e) {
             model.addAttribute("funfact", "&quot;Chuck Norris once broke the fun fact server!&quot;");
@@ -29,7 +29,7 @@ public class ServiceUtility {
     public void getComic(Model model) {
         try {
             URL obj = new URL("http://localhost:60001/getComic");
-            Map<String, String> response = getResponse(obj);
+            Map<String, Object> response = getResponse(obj);
             model.addAttribute("comic_uri",  response.get("img"));
             model.addAttribute("comic_title", response.get("title"));
         } catch (IOException e) {
@@ -38,7 +38,17 @@ public class ServiceUtility {
         }
     }
 
-    private Map<String, String> getResponse(URL obj) throws IOException {
+    public String getAvatar() {
+        try {
+            URL obj = new URL("http://localhost:60002/getAvatar");
+            Map<String, Object> response = getResponse(obj);
+            return (String) response.get("avatar_uri");
+        } catch (IOException e) {
+            return "https://robohash.org/Anonymus";
+        }
+    }
+
+    Map<String, Object> getResponse(URL obj) throws IOException {
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         // optional default is GET
         con.setRequestMethod("GET");
@@ -49,4 +59,5 @@ public class ServiceUtility {
         Gson gson = new Gson();
         return gson.fromJson(responseBody, new TypeToken<Map<String, Object>>() {}.getType());
     }
+
 }
