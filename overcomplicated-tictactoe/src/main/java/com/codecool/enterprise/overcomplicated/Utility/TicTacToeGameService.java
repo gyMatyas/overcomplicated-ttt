@@ -7,11 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Map;
-import java.util.Random;
-
 @Service
 public class TicTacToeGameService {
 
@@ -69,16 +64,6 @@ public class TicTacToeGameService {
         return null;
     }
 
-    private int getAIMove(String boardState) {
-        try {
-            URL obj = new URL("http://tttapi.herokuapp.com/api/v1/" + boardState + "/O");
-            Map<String, Object> response = serviceUtility.getResponse(obj);
-            Double recommendation = (Double) response.get("recommendation");
-            return recommendation != null ? recommendation.intValue() : -1;
-        } catch (IOException e) {
-            return new Random().nextInt(9);
-        }
-    }
 
     public String handleMoves(@ModelAttribute("move") int move, @ModelAttribute("game") TictactoeGame game, Model model) {
         System.out.println("Before player: " + game.toStringState());
@@ -93,7 +78,7 @@ public class TicTacToeGameService {
                 game.setOver(true);
             }
             System.out.println("After player and before AI: " + game.toStringState());
-            int aiMove = getAIMove(game.toStringState());
+            int aiMove = serviceUtility.getAIMove(game.toStringState());
             if (aiMove != -1) game.aiMove(aiMove);
             System.out.println("After round: " + game.toStringState());
             if (winCheck(game.getBoard()) == State.AI) {

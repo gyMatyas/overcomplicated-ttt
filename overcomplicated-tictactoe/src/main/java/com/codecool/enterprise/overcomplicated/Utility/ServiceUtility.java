@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 import static org.springframework.http.HttpHeaders.USER_AGENT;
@@ -45,6 +46,24 @@ public class ServiceUtility {
             return (String) response.get("avatar_uri");
         } catch (IOException e) {
             return "https://robohash.org/Anonymus";
+        }
+    }
+
+    public int getAIMove(String boardState) {
+        try {
+            URL obj = new URL("http://localhost:60003/getAIMove");
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("User-Agent", USER_AGENT);
+            con.setRequestProperty("boardData", boardState);
+            Scanner scanner = new Scanner(con.getInputStream());
+            String responseBody = scanner.useDelimiter("\\A").next();
+            Gson gson = new Gson();
+            Map<String, Object> response = gson.fromJson(responseBody, new TypeToken<Map<String, Object>>() {}.getType());
+            Double recommendation = (Double) response.get("recommendation");
+            return recommendation != null ? recommendation.intValue() : -1;
+        } catch (IOException e) {
+            return new Random().nextInt(9);
         }
     }
 
